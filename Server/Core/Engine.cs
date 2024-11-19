@@ -20,10 +20,10 @@ internal class Engine
         {
             ActionType.FindRoom => FindAndEnterRoom(request),
             ActionType.TakeCard => TakeCard(request),
-            ActionType.Skip => Skip(request),
-            ActionType.OutRoom => OutFromRoom(request),
+            ActionType.SkipTurn => SkipTurn(request),
+            ActionType.OutRoom => OutRoom(request),
             ActionType.CheckTurn => CheckTurn(request),
-            ActionType.TestConnection => ServerResponse.Success(request.RequestId, new GameInfo { Status = GameStatus.Lobby }), 
+            ActionType.TestConnection => ServerResponse.Success(request.RequestId, new GameInfo { Status = GameStatus.Lobby }),
             _ => ServerResponse.Failed(request.RequestId, "Invalid action"),
         };
     }
@@ -35,28 +35,30 @@ internal class Engine
         if (room is null)
             return ServerResponse.Failed(request.RequestId, "Room not found");
 
-        if (room.PlayerPlaying.Identifier == request.PlayerId)      
+        if (room.PlayerPlaying.Identifier == request.PlayerId)
             return GetResponse(request, GameStatus.Playing, room);
-        
-        if(room.Players.Count() == 1)
+
+        if (room.Players.Count == 1)
         {
             room.PlayerPlaying = room.Players[0];
             return GetResponse(request, GameStatus.Playing, room);
         }
-         
+
         return GetResponse(request, GameStatus.WaitingTurn, room);
     }
 
-    private ServerResponse Skip(ClientRequest request)
+    private ServerResponse SkipTurn(ClientRequest request)
     {
         var room = _rooms.FindRoom(request.RoomId!);
 
         if (room is null)
             return ServerResponse.Failed(request.RequestId, "Room not found");
 
+        var player = room.Players.Single(p => p.Identifier == request.PlayerId);
+
         room.NextPlayer();
 
-        return GetResponse(request, GameStatus.WaitingTurn, room);
+        return GetResponse(request, GameStatus.Skipped, room);
     }
 
     private ServerResponse TakeCard(ClientRequest request)
@@ -66,14 +68,51 @@ internal class Engine
         if (room is null)
             return ServerResponse.Failed(request.RequestId, "Room not found");
 
-        room.Players.Single(p => p.Identifier == request.PlayerId).Cards.Add(room.Deck.Draw());
+        var player = room.Players.Single(p => p.Identifier == request.PlayerId);
+
+        player.Cards.Add(room.Deck.Draw());
+
+        CheckPoints(player);
 
         room.NextPlayer();
 
-        return GetResponse(request, GameStatus.WaitingTurn, room);
+        return GetResponse(request, player.Status, room);
     }
 
-    private ServerResponse OutFromRoom(ClientRequest request)
+    private void CheckPoints(Player player)
+    {
+        var points = GetPoints(player.Cards);
+
+        if (points > 21)
+        {
+            player.Status = GameStatus.Lost;    
+            return;
+        }
+
+        player.Status = GameStatus.WaitingTurn;
+    }
+
+    private int GetPoints(List<PlayCard> playCards, bool onlyVisibles = true)
+    {
+        var cards = playCards.Where(x => x.Visible == onlyVisibles).Select(x => x.Card).ToList();
+
+        var points = cards.Sum(x => x.Value);
+
+        if (points > 21)
+        {
+            var aces = playCards.Where(x => x.Visible == onlyVisibles).Select(x => x.Card).Count(x => x.Value == 1);
+
+            while (points > 21 && aces > 0)
+            {
+                points -= 10;
+                aces--;
+            }
+        }
+
+        return points;
+    }
+
+    private ServerResponse OutRoom(ClientRequest request)
     {
         var room = _rooms.FindRoom(request.RoomId!);
 
@@ -113,6 +152,8 @@ internal class Engine
 
     private ServerResponse GetResponse(ClientRequest request, GameStatus status, Room? room = null)
     {
+        var player = room?.Players.SingleOrDefault(x => x.Identifier == request.PlayerId);
+
         return ServerResponse.Success(
             request.RequestId,
             new GameInfo
@@ -122,9 +163,10 @@ internal class Engine
                 {
                     Indentifier = room.Identifier.ToString(),
                     CrupierCards = room.CrupierCards,
-                    Cards = room.Players.Single(x => x.Identifier == request.PlayerId).Cards,
+                    Cards = player!.Cards,
+                    Points = GetPoints(player.Cards),
                     Players = room.Players.Where(x => x.Identifier != request.PlayerId)
-                                          .Select(p => new GameInfoPlayer { Identifier = p.Identifier, Turn = p.Turn, Cards = p.Cards }).ToList()
+                                          .Select(p => new GameInfoPlayer { Identifier = p.Identifier, Turn = p.Turn, Cards = p.Cards, Status = p.Status }).ToList()
                 }
             });
     }

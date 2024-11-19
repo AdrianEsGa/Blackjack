@@ -36,12 +36,14 @@ public class GameInfoRoom
     public string Indentifier { get; set; } = "";
     public List<PlayCard> CrupierCards { get; set; } = default!;
     public List<PlayCard> Cards { get; set; } = default!;   
+    public int Points { get; set; }
     public List<GameInfoPlayer> Players { get; set; } = default!;
 }
 
 public class GameInfoPlayer
 {
     public string Identifier { get; set; } = "";
+    public GameStatus Status { get; set; }
     public int Turn { get; set; }
     public List<PlayCard> Cards { get; set; } = default!;
 }
@@ -50,5 +52,7 @@ public enum GameStatus
 {
     Lobby = 0,
     WaitingTurn = 1,
-    Playing = 2
+    Playing = 2,
+    Skipped = 3,
+    Lost = 4
 }

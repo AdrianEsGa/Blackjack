@@ -4,17 +4,17 @@ public class Card
 {
     public CardType Type { get; set; }
     public int Number { get; set; }
-    public List<int> Value
+    public int Value
     {
         get
         {
-            if (Number > 10)
-                return [10];
-
             if (Number == 1)
-                return [1, 10];
+                return 11;
 
-            return [Number];
+            if (Number > 10)
+                return 10;
+
+            return Number;
         }
     }
 

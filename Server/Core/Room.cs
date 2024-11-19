@@ -27,7 +27,13 @@ public class Room
     {
         var turn = Players.Count == 0 ? 1 : Players.Max(x => x.Turn) + 1;
 
-        Players.Add(new Player { Identifier = playerId, Turn = turn, Cards = [Deck.Draw(isVisible: false), Deck.Draw()] });
+        Players.Add(new Player
+        {
+            Identifier = playerId,
+            Turn = turn,
+            Status = GameStatus.WaitingTurn,
+            Cards = [Deck.Draw(isVisible: false), Deck.Draw()]
+        });
     }
 
     public void RemovePlayer(string playerId)
@@ -41,7 +47,12 @@ public class Room
 
     public void NextPlayer()
     {
-        PlayerPlaying = GetNext(Players, PlayerPlaying.Turn, p => p.Turn);
+        var waitingTurnPlayers = Players.Where(x => x.Status == GameStatus.WaitingTurn).ToList();    
+
+        if(waitingTurnPlayers.Count == 0)
+            return;
+
+        PlayerPlaying = GetNext(waitingTurnPlayers, PlayerPlaying.Turn, p => p.Turn);
     }
 
     public T GetNext<T>(List<T> list, int current, Func<T, int> selector)

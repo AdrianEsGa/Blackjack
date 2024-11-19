@@ -26,7 +26,7 @@ public class Engine
 
     public void Skip()
     {
-        Send(BuildRequest(ActionType.Skip));
+        Send(BuildRequest(ActionType.SkipTurn));
     }
 
     public void OutRoom()
