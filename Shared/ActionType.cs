@@ -6,6 +6,6 @@ public enum ActionType
     TakeCard = 1,
     SkipTurn = 2,
     OutRoom = 3,
-    CheckTurn = 4,
+    RefreshGame = 4,
     TestConnection = 5
 }

@@ -5,10 +5,11 @@ namespace Server.Core;
 public class Room
 {
     public Guid Identifier { get; private set; }
+    public RoomStatus Status { get; set; } = RoomStatus.Playing;
     public List<Player> Players { get; set; } = default!;
     public Player PlayerPlaying { get; set; } = default!;
     public Deck Deck { get; set; } = default!;
-    public List<PlayCard> CrupierCards { get; set; } = [];
+    public Player Crupier { get; set; } = default!;
 
     public static Room Build()
     {
@@ -19,7 +20,7 @@ public class Room
             Identifier = Guid.NewGuid(),
             Players = [],
             Deck = deck,
-            CrupierCards = [deck.Draw(isVisible: false), deck.Draw()]
+            Crupier = Player.BuildCrupier(deck)
         };
     }
 
@@ -31,7 +32,7 @@ public class Room
         {
             Identifier = playerId,
             Turn = turn,
-            Status = GameStatus.WaitingTurn,
+            Status = PlayerStatus.WaitingTurn,
             Cards = [Deck.Draw(isVisible: false), Deck.Draw()]
         });
     }
@@ -47,12 +48,10 @@ public class Room
 
     public void NextPlayer()
     {
-        var waitingTurnPlayers = Players.Where(x => x.Status == GameStatus.WaitingTurn).ToList();    
-
-        if(waitingTurnPlayers.Count == 0)
-            return;
-
-        PlayerPlaying = GetNext(waitingTurnPlayers, PlayerPlaying.Turn, p => p.Turn);
+        if (Players.Where(x => x.Status == PlayerStatus.WaitingTurn).Any())
+            PlayerPlaying = GetNext(Players, PlayerPlaying!.Turn, p => p.Turn);
+        else
+            Status = RoomStatus.EndGame;
     }
 
     public T GetNext<T>(List<T> list, int current, Func<T, int> selector)
@@ -77,4 +76,6 @@ public static class RoomExtensions
     {
         return rooms.SingleOrDefault(r => r.Identifier.ToString() == roomId);
     }
+
+    public static bool HasOnlyOnePlayer(this Room room) => room.Players.Count == 1;
 }

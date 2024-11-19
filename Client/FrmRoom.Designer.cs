@@ -34,7 +34,6 @@ partial class FrmRoom
         btnSkip = new Button();
         btnTakeCard = new Button();
         timerCheckTurn = new System.Windows.Forms.Timer(components);
-        btnFindRoom = new Button();
         SuspendLayout();
         // 
         // txtMessage
@@ -81,22 +80,11 @@ partial class FrmRoom
         timerCheckTurn.Interval = 1000;
         timerCheckTurn.Tick += timerCheckTurn_Tick;
         // 
-        // btnFindRoom
-        // 
-        btnFindRoom.Location = new Point(22, 12);
-        btnFindRoom.Name = "btnFindRoom";
-        btnFindRoom.Size = new Size(112, 34);
-        btnFindRoom.TabIndex = 9;
-        btnFindRoom.Text = "Find room";
-        btnFindRoom.UseVisualStyleBackColor = true;
-        btnFindRoom.Click += btnFindRoom_Click;
-        // 
         // FrmRoom
         // 
         AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(716, 339);
-        Controls.Add(btnFindRoom);
         Controls.Add(btnOutRoom);
         Controls.Add(btnSkip);
         Controls.Add(btnTakeCard);
@@ -116,5 +104,4 @@ partial class FrmRoom
     private Button btnSkip;
     private Button btnTakeCard;
     private System.Windows.Forms.Timer timerCheckTurn;
-    private Button btnFindRoom;
 }

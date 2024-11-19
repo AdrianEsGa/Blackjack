@@ -18,6 +18,7 @@ public partial class FrmLauncher : Form
     private void FrmLauncher_Load(object sender, EventArgs e)
     {
         btnLaunchClient.Enabled = false;
+        pgrBarTestConnection.Style = ProgressBarStyle.Marquee;  
     }
 
     private void timerTestConnection_Tick(object sender, EventArgs e)
@@ -43,11 +44,13 @@ public partial class FrmLauncher : Form
         {
             lblErrorMessage.Text = string.Empty;
             btnLaunchClient.Enabled = true;
+            pgrBarTestConnection.Visible = false;   
         }
         else
         {
             lblErrorMessage.Text = serverResponse.ErrorMessage;
             btnLaunchClient.Enabled = false;
+            pgrBarTestConnection.Visible = true;
         }
     }
 }

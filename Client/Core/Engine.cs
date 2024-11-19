@@ -10,7 +10,7 @@ public class Engine
 
     private GameInfo? _gameInfo;
 
-    public bool IsPlaying() => _gameInfo?.Status == GameStatus.Playing;
+    public bool IsPlaying() => _gameInfo?.Status == PlayerStatus.Playing;
 
     public bool IsInRoom() => _gameInfo?.Room is not null;
 
@@ -42,7 +42,7 @@ public class Engine
         if (!IsInRoom())
             return;
 
-        Send(BuildRequest(ActionType.CheckTurn));
+        Send(BuildRequest(ActionType.RefreshGame));
     }
 
     public void Receive(ServerResponse serverResponse)

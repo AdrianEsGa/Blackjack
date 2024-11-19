@@ -32,6 +32,7 @@ partial class FrmLauncher
         btnLaunchClient = new Button();
         timerTestConnection = new System.Windows.Forms.Timer(components);
         lblErrorMessage = new Label();
+        pgrBarTestConnection = new ProgressBar();
         SuspendLayout();
         // 
         // btnLaunchClient
@@ -53,17 +54,25 @@ partial class FrmLauncher
         // lblErrorMessage
         // 
         lblErrorMessage.AutoSize = true;
-        lblErrorMessage.Location = new Point(110, 290);
+        lblErrorMessage.Location = new Point(34, 396);
         lblErrorMessage.Name = "lblErrorMessage";
-        lblErrorMessage.Size = new Size(163, 25);
+        lblErrorMessage.Size = new Size(266, 25);
         lblErrorMessage.TabIndex = 1;
-        lblErrorMessage.Text = "Server not found ...";
+        lblErrorMessage.Text = "Connecting to Blackjack game ...";
+        // 
+        // pgrBarTestConnection
+        // 
+        pgrBarTestConnection.Location = new Point(34, 343);
+        pgrBarTestConnection.Name = "pgrBarTestConnection";
+        pgrBarTestConnection.Size = new Size(713, 34);
+        pgrBarTestConnection.TabIndex = 2;
         // 
         // FrmLauncher
         // 
         AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(800, 450);
+        ClientSize = new Size(786, 450);
+        Controls.Add(pgrBarTestConnection);
         Controls.Add(lblErrorMessage);
         Controls.Add(btnLaunchClient);
         Name = "FrmLauncher";
@@ -78,4 +87,5 @@ partial class FrmLauncher
     private Button btnLaunchClient;
     private System.Windows.Forms.Timer timerTestConnection;
     private Label lblErrorMessage;
+    private ProgressBar pgrBarTestConnection;
 }

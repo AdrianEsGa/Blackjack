@@ -4,7 +4,7 @@ namespace Server.Core;
 
 internal class Engine
 {
-    private const int _maxRooms = 2;
+    private const int _maxRooms = 1;
     private const int _maxPlayersPerRoom = 3;
 
     private List<Room> _rooms;
@@ -22,29 +22,38 @@ internal class Engine
             ActionType.TakeCard => TakeCard(request),
             ActionType.SkipTurn => SkipTurn(request),
             ActionType.OutRoom => OutRoom(request),
-            ActionType.CheckTurn => CheckTurn(request),
-            ActionType.TestConnection => ServerResponse.Success(request.RequestId, new GameInfo { Status = GameStatus.Lobby }),
+            ActionType.RefreshGame => RefreshGame(request),
+            ActionType.TestConnection => ServerResponse.Success(request.RequestId, new GameInfo { Status = PlayerStatus.Lobby }),
             _ => ServerResponse.Failed(request.RequestId, "Invalid action"),
         };
     }
 
-    private ServerResponse CheckTurn(ClientRequest request)
+    private ServerResponse RefreshGame(ClientRequest request)
     {
         var room = _rooms.FindRoom(request.RoomId!);
 
         if (room is null)
             return ServerResponse.Failed(request.RequestId, "Room not found");
 
-        if (room.PlayerPlaying.Identifier == request.PlayerId)
-            return GetResponse(request, GameStatus.Playing, room);
+        if (room.Status == RoomStatus.EndGame)
+            return GetResponse(request, room);
 
-        if (room.Players.Count == 1)
+        var player = room.Players.Single(p => p.Identifier == request.PlayerId);
+
+        if (room.PlayerPlaying.Identifier == player.Identifier)
         {
-            room.PlayerPlaying = room.Players[0];
-            return GetResponse(request, GameStatus.Playing, room);
+            player.Status = PlayerStatus.Playing;
+            return GetResponse(request, room);
         }
 
-        return GetResponse(request, GameStatus.WaitingTurn, room);
+        if (room.HasOnlyOnePlayer())
+        {
+            player.Status = PlayerStatus.Playing;
+            room.PlayerPlaying = player;
+            return GetResponse(request, room);
+        }
+
+        return GetResponse(request, room);
     }
 
     private ServerResponse SkipTurn(ClientRequest request)
@@ -54,11 +63,16 @@ internal class Engine
         if (room is null)
             return ServerResponse.Failed(request.RequestId, "Room not found");
 
+        if (room.Status == RoomStatus.EndGame)
+            return GetResponse(request, room);
+
         var player = room.Players.Single(p => p.Identifier == request.PlayerId);
 
-        room.NextPlayer();
+        player.Status = PlayerStatus.Skipped;
 
-        return GetResponse(request, GameStatus.Skipped, room);
+        MoveToNextPlayer(room);
+
+        return GetResponse(request, room);
     }
 
     private ServerResponse TakeCard(ClientRequest request)
@@ -68,48 +82,18 @@ internal class Engine
         if (room is null)
             return ServerResponse.Failed(request.RequestId, "Room not found");
 
+        if (room.Status == RoomStatus.EndGame)
+            return GetResponse(request, room);
+
         var player = room.Players.Single(p => p.Identifier == request.PlayerId);
 
         player.Cards.Add(room.Deck.Draw());
 
-        CheckPoints(player);
+        player.CheckStatus(room.Status);
 
-        room.NextPlayer();
+        MoveToNextPlayer(room);
 
-        return GetResponse(request, player.Status, room);
-    }
-
-    private void CheckPoints(Player player)
-    {
-        var points = GetPoints(player.Cards);
-
-        if (points > 21)
-        {
-            player.Status = GameStatus.Lost;    
-            return;
-        }
-
-        player.Status = GameStatus.WaitingTurn;
-    }
-
-    private int GetPoints(List<PlayCard> playCards, bool onlyVisibles = true)
-    {
-        var cards = playCards.Where(x => x.Visible == onlyVisibles).Select(x => x.Card).ToList();
-
-        var points = cards.Sum(x => x.Value);
-
-        if (points > 21)
-        {
-            var aces = playCards.Where(x => x.Visible == onlyVisibles).Select(x => x.Card).Count(x => x.Value == 1);
-
-            while (points > 21 && aces > 0)
-            {
-                points -= 10;
-                aces--;
-            }
-        }
-
-        return points;
+        return GetResponse(request, room);
     }
 
     private ServerResponse OutRoom(ClientRequest request)
@@ -124,7 +108,7 @@ internal class Engine
         if (room.Players.Count() == 0)
             _rooms.Remove(room);
 
-        return GetResponse(request, GameStatus.Lobby);
+        return GetResponse(request);
     }
 
     private ServerResponse FindAndEnterRoom(ClientRequest request)
@@ -142,47 +126,125 @@ internal class Engine
 
         room.AddPlayer(request.PlayerId);
 
-        var firstPlayer = room.Players.Count() == 1;
-
-        if (firstPlayer)
+        if (room.HasOnlyOnePlayer())
+        {
             room.PlayerPlaying = room.Players[0];
+            room.Players[0].Status = PlayerStatus.Playing;
+        }
 
-        return GetResponse(request, firstPlayer ? GameStatus.Playing : GameStatus.WaitingTurn, room);
+        return GetResponse(request, room);
     }
 
-    private ServerResponse GetResponse(ClientRequest request, GameStatus status, Room? room = null)
+    private void MoveToNextPlayer(Room room)
+    {
+        room.NextPlayer();
+
+        if (room.Status == RoomStatus.EndGame)
+        {
+            MakeAllCardsVisibles(room);
+            CheckWinner(room);
+        }
+    }
+
+    private void CheckWinner(Room room)
+    {
+        var activePlayers = room.Players.Where(x => x.Status == PlayerStatus.Skipped);
+
+        if (activePlayers.Any())
+        {
+            //the players with more than 21 points lose
+            var crupierPoints = room.Crupier.Points.TotalPoints;
+
+            foreach (var player in activePlayers)
+            {
+                var points = player.Points.TotalPoints;
+
+                if (points > 21)
+                    player.Status = PlayerStatus.Lost;
+            }
+
+            //the players with less points than the crupier lose, and the players with more points win
+            activePlayers = room.Players.Where(x => x.Status == PlayerStatus.Skipped).ToList();
+
+            if (activePlayers.Any())
+            {
+                foreach (var player in activePlayers)
+                {
+                    var points = player.Points.TotalPoints;
+
+                    if (points > crupierPoints)
+                        player.Status = PlayerStatus.Winner;
+                    else
+                        player.Status = PlayerStatus.Lost;
+                }
+            }
+
+            //if there are more than one winners, the one with more points wins
+            var winners = room.Players.Where(x => x.Status == PlayerStatus.Winner).ToList();
+
+            if (winners.Count() > 1)
+            {
+                var winner = winners.OrderByDescending(x => x.Points.TotalPoints).First();
+                winner.Status = PlayerStatus.Winner;
+
+                foreach (var player in winners.Where(x => x.Identifier != winner.Identifier))
+                {
+                    player.Status = PlayerStatus.Lost;
+                }
+            }
+        }
+
+        //if there are no winners, the crupier wins
+        if (!room.Players.Any(x => x.Status == PlayerStatus.Winner))
+        {
+            room.Crupier.Status = PlayerStatus.Winner;
+        }
+        else room.Crupier.Status = PlayerStatus.Lost;
+    }
+
+    private static void MakeAllCardsVisibles(Room room)
+    {
+        foreach (var player in room.Players)
+        {
+            foreach (var notVisibleCard in player.Cards.Where(x => !x.Visible))
+            {
+                notVisibleCard.Visible = true;
+            }
+        }
+    }
+
+    private ServerResponse GetResponse(ClientRequest request, Room? room = null)
     {
         var player = room?.Players.SingleOrDefault(x => x.Identifier == request.PlayerId);
+        var crupier = room?.Crupier;
 
         return ServerResponse.Success(
             request.RequestId,
             new GameInfo
             {
-                Status = status,
+                Status = player is null ? PlayerStatus.Lobby : player.Status,
                 Room = room is null ? null : new GameInfoRoom
                 {
                     Indentifier = room.Identifier.ToString(),
-                    CrupierCards = room.CrupierCards,
+                    Crupier = new GameInfoPlayer
+                    {
+                        Identifier = crupier!.Identifier,
+                        Cards = crupier.Cards,
+                        Status = crupier.Status,
+                        Points = crupier.Points
+                    },
                     Cards = player!.Cards,
-                    Points = GetPoints(player.Cards),
+                    Points = player.Points,
                     Players = room.Players.Where(x => x.Identifier != request.PlayerId)
-                                          .Select(p => new GameInfoPlayer { Identifier = p.Identifier, Turn = p.Turn, Cards = p.Cards, Status = p.Status }).ToList()
+                                          .Select(p => new GameInfoPlayer
+                                          {
+                                              Identifier = p.Identifier,
+                                              Turn = p.Turn,
+                                              Cards = p.Cards,
+                                              Status = p.Status,
+                                              Points = p.Points
+                                          }).ToList()
                 }
             });
-    }
-
-    public T GetNext<T>(List<T> list, int current, Func<T, int> selector)
-    {
-        if (list == null || list.Count == 0)
-            throw new ArgumentException("The list cannot be null or empty.");
-
-        int currentIndex = list.FindIndex(item => selector(item) == current);
-
-        if (currentIndex == -1)
-            throw new ArgumentException("The current ID does not exist in the list.");
-
-        int nextIndex = (currentIndex + 1) % list.Count;
-
-        return list[nextIndex];
     }
 }
