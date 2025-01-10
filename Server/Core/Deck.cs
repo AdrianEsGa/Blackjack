@@ -4,7 +4,9 @@ namespace Server.Core;
 
 public class Deck
 {
-    public List<Card> Cards { get; set; } = [];
+    public List<Card> Cards { get; private set; } = [];
+
+    private Deck() { }
 
     public static Deck Build()
     {

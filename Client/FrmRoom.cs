@@ -50,6 +50,8 @@ public partial class FrmRoom : Form
 
     private void RefreshScreen()
     {
+        Text = _engine.IsInRoom() ? $"Room {_engine.GetGameInfo().Room!.Indentifier}" : "Lobby";
+
         txtMessage.Text = JsonSerializer.Serialize(_engine.GetGameInfo());
         btnOutRoom.Enabled = _engine.IsInRoom();
 

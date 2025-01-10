@@ -2,7 +2,7 @@
 
 namespace Server.Core;
 
-internal class Engine
+public class Engine
 {
     private const int _maxRooms = 1;
     private const int _maxPlayersPerRoom = 3;

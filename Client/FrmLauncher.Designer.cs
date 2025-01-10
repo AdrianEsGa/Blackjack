@@ -37,9 +37,9 @@ partial class FrmLauncher
         // 
         // btnLaunchClient
         // 
-        btnLaunchClient.Location = new Point(280, 129);
+        btnLaunchClient.Location = new Point(45, 30);
         btnLaunchClient.Name = "btnLaunchClient";
-        btnLaunchClient.Size = new Size(208, 78);
+        btnLaunchClient.Size = new Size(702, 110);
         btnLaunchClient.TabIndex = 0;
         btnLaunchClient.Text = "Find and Enter Room";
         btnLaunchClient.UseVisualStyleBackColor = true;
@@ -54,7 +54,7 @@ partial class FrmLauncher
         // lblErrorMessage
         // 
         lblErrorMessage.AutoSize = true;
-        lblErrorMessage.Location = new Point(34, 396);
+        lblErrorMessage.Location = new Point(45, 219);
         lblErrorMessage.Name = "lblErrorMessage";
         lblErrorMessage.Size = new Size(266, 25);
         lblErrorMessage.TabIndex = 1;
@@ -62,19 +62,20 @@ partial class FrmLauncher
         // 
         // pgrBarTestConnection
         // 
-        pgrBarTestConnection.Location = new Point(34, 343);
+        pgrBarTestConnection.Location = new Point(45, 166);
         pgrBarTestConnection.Name = "pgrBarTestConnection";
-        pgrBarTestConnection.Size = new Size(713, 34);
+        pgrBarTestConnection.Size = new Size(702, 34);
         pgrBarTestConnection.TabIndex = 2;
         // 
         // FrmLauncher
         // 
         AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(786, 450);
+        ClientSize = new Size(786, 267);
         Controls.Add(pgrBarTestConnection);
         Controls.Add(lblErrorMessage);
         Controls.Add(btnLaunchClient);
+        FormBorderStyle = FormBorderStyle.FixedToolWindow;
         Name = "FrmLauncher";
         Text = "FrmLauncher";
         Load += FrmLauncher_Load;
