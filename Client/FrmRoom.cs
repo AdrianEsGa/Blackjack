@@ -6,11 +6,14 @@ namespace Client;
 public partial class FrmRoom : Form
 {
     private Engine _engine;
+    private Guid _playerId; 
 
-    public FrmRoom()
+    public FrmRoom(Guid playerId)
     {
         InitializeComponent();
-        _engine = new Engine();
+        _playerId = playerId;
+        lblPlayerId.Text = $"Player: {playerId}";   
+        _engine = new Engine(playerId);
     }
 
     private void FrmRoom_Load(object sender, EventArgs e)
@@ -61,7 +64,7 @@ public partial class FrmRoom : Form
 
     private void btnNewPlayer_Click(object sender, EventArgs e)
     {
-        FrmRoom form = new FrmRoom();
+        FrmRoom form = new FrmRoom(_playerId);
         form.Show();
     }
 

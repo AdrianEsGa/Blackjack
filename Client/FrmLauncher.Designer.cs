@@ -33,11 +33,12 @@ partial class FrmLauncher
         timerTestConnection = new System.Windows.Forms.Timer(components);
         lblErrorMessage = new Label();
         pgrBarTestConnection = new ProgressBar();
+        lblPlayerId = new Label();
         SuspendLayout();
         // 
         // btnLaunchClient
         // 
-        btnLaunchClient.Location = new Point(45, 30);
+        btnLaunchClient.Location = new Point(40, 93);
         btnLaunchClient.Name = "btnLaunchClient";
         btnLaunchClient.Size = new Size(702, 110);
         btnLaunchClient.TabIndex = 0;
@@ -54,7 +55,7 @@ partial class FrmLauncher
         // lblErrorMessage
         // 
         lblErrorMessage.AutoSize = true;
-        lblErrorMessage.Location = new Point(45, 219);
+        lblErrorMessage.Location = new Point(40, 282);
         lblErrorMessage.Name = "lblErrorMessage";
         lblErrorMessage.Size = new Size(266, 25);
         lblErrorMessage.TabIndex = 1;
@@ -62,16 +63,26 @@ partial class FrmLauncher
         // 
         // pgrBarTestConnection
         // 
-        pgrBarTestConnection.Location = new Point(45, 166);
+        pgrBarTestConnection.Location = new Point(40, 229);
         pgrBarTestConnection.Name = "pgrBarTestConnection";
         pgrBarTestConnection.Size = new Size(702, 34);
         pgrBarTestConnection.TabIndex = 2;
+        // 
+        // lblPlayerId
+        // 
+        lblPlayerId.AutoSize = true;
+        lblPlayerId.Location = new Point(40, 29);
+        lblPlayerId.Name = "lblPlayerId";
+        lblPlayerId.Size = new Size(279, 25);
+        lblPlayerId.TabIndex = 3;
+        lblPlayerId.Text = "Player Id: 28821nud2wnud19d81j";
         // 
         // FrmLauncher
         // 
         AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(786, 267);
+        ClientSize = new Size(797, 349);
+        Controls.Add(lblPlayerId);
         Controls.Add(pgrBarTestConnection);
         Controls.Add(lblErrorMessage);
         Controls.Add(btnLaunchClient);
@@ -89,4 +100,5 @@ partial class FrmLauncher
     private System.Windows.Forms.Timer timerTestConnection;
     private Label lblErrorMessage;
     private ProgressBar pgrBarTestConnection;
+    private Label lblPlayerId;
 }

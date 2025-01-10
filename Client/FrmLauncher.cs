@@ -4,14 +4,18 @@ namespace Client;
 
 public partial class FrmLauncher : Form
 {
+    private Guid PlayerId { get; set; }
+
     public FrmLauncher()
     {
         InitializeComponent();
+        PlayerId = Guid.NewGuid();
+        lblPlayerId.Text = $"Player: {PlayerId}";
     }
 
     private void btnLaunchClient_Click(object sender, EventArgs e)
     {
-        FrmRoom form = new();
+        FrmRoom form = new(PlayerId);
         form.Show();
     }
 

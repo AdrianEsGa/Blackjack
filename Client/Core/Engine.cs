@@ -4,11 +4,13 @@ namespace Client.Core;
 
 public class Engine
 {
-    private Engine _engine;
-
-    private Guid _guid = Guid.NewGuid();
-
     private GameInfo? _gameInfo;
+    private readonly Guid _playerId;
+
+    public Engine(Guid playerId)
+    {
+        _playerId = playerId;
+    }
 
     public bool IsPlaying() => _gameInfo?.Status == PlayerStatus.Playing;
 
@@ -72,7 +74,7 @@ public class Engine
         return new ClientRequest
         {
             RequestId = Guid.NewGuid().ToString(),
-            PlayerId = _guid.ToString(),
+            PlayerId = _playerId.ToString(),
             RoomId = _gameInfo?.Room?.Indentifier,
             Action = action
         };

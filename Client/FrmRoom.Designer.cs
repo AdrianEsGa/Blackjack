@@ -34,7 +34,7 @@ partial class FrmRoom
         btnSkip = new Button();
         btnTakeCard = new Button();
         timerCheckTurn = new System.Windows.Forms.Timer(components);
-        tableLayoutPanel1 = new TableLayoutPanel();
+        lblPlayerId = new Label();
         SuspendLayout();
         // 
         // txtMessage
@@ -81,25 +81,21 @@ partial class FrmRoom
         timerCheckTurn.Interval = 1000;
         timerCheckTurn.Tick += timerCheckTurn_Tick;
         // 
-        // tableLayoutPanel1
+        // lblPlayerId
         // 
-        tableLayoutPanel1.ColumnCount = 1;
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-        tableLayoutPanel1.Location = new Point(130, 63);
-        tableLayoutPanel1.Name = "tableLayoutPanel1";
-        tableLayoutPanel1.RowCount = 3;
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-        tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tableLayoutPanel1.Size = new Size(842, 413);
-        tableLayoutPanel1.TabIndex = 9;
+        lblPlayerId.AutoSize = true;
+        lblPlayerId.Location = new Point(23, 31);
+        lblPlayerId.Name = "lblPlayerId";
+        lblPlayerId.Size = new Size(279, 25);
+        lblPlayerId.TabIndex = 9;
+        lblPlayerId.Text = "Player Id: 28821nud2wnud19d81j";
         // 
         // FrmRoom
         // 
         AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;
         ClientSize = new Size(1266, 832);
-        Controls.Add(tableLayoutPanel1);
+        Controls.Add(lblPlayerId);
         Controls.Add(btnOutRoom);
         Controls.Add(btnSkip);
         Controls.Add(btnTakeCard);
@@ -119,5 +115,5 @@ partial class FrmRoom
     private Button btnSkip;
     private Button btnTakeCard;
     private System.Windows.Forms.Timer timerCheckTurn;
-    private TableLayoutPanel tableLayoutPanel1;
+    private Label lblPlayerId;
 }

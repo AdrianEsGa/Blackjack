@@ -7,7 +7,35 @@ namespace UnitTests;
 public class ServerEngineTests
 {
     [Fact]
-    public void Engine_Should_Find_And_Enter_Room()
+    public void Engine_Should_Find_And_Enter_Two_Rooms_For_Same_Player()
+    {
+        var engine = new Engine();
+        var player1 = new ClientRequest
+        {
+            RequestId = Guid.NewGuid().ToString(),
+            PlayerId = "Player1",
+            Action = ActionType.FindRoom
+        };
+
+        var response = engine.Receive(player1);
+
+        var response2 = engine.Receive(player1);
+
+        response.Status.Should().Be(ResponseStatus.Success);
+        response.GameInfo.Should().NotBeNull();
+        response.GameInfo.Status.Should().Be(PlayerStatus.Playing);
+        response.GameInfo.Room.Should().NotBeNull();
+        response.GameInfo.Room.Players.Count.Should().Be(0);
+
+        response2.Status.Should().Be(ResponseStatus.Success);
+        response2.GameInfo.Should().NotBeNull();
+        response2.GameInfo.Status.Should().Be(PlayerStatus.WaitingTurn);
+        response2.GameInfo.Room.Should().NotBeNull();
+        response2.GameInfo.Room.Players.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public void Engine_Should_Find_And_Enter_Room_For_Two_Different_Players()
     {
         var engine = new Engine();
         var player1 = new ClientRequest
