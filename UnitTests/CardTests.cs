@@ -11,9 +11,9 @@ public class CardTests
         var tenOfHearts = new Card { Type = CardType.Hearts, Number = 10 };
         var jackOfDiamonds = new Card { Type = CardType.Diamonds, Number = 11 };
 
-        Assert.Equal(11, aceOfSpades.Value);
-        Assert.Equal(10, tenOfHearts.Value);
-        Assert.Equal(10, jackOfDiamonds.Value);
+        Assert.Equal(11, aceOfSpades.Points);
+        Assert.Equal(10, tenOfHearts.Points);
+        Assert.Equal(10, jackOfDiamonds.Points);
     }
 
     [Fact]
@@ -35,8 +35,8 @@ public class CardTests
         var tenOfHearts = new Card { Type = CardType.Hearts, Number = 10 };
         var jackOfDiamonds = new Card { Type = CardType.Diamonds, Number = 11 };
 
-        Assert.Equal("1_Spades.png", aceOfSpades.ImageName);
+        Assert.Equal("A_Spades.png", aceOfSpades.ImageName);
         Assert.Equal("10_Hearts.png", tenOfHearts.ImageName);
-        Assert.Equal("11_Diamonds.png", jackOfDiamonds.ImageName);
+        Assert.Equal("J_Diamonds.png", jackOfDiamonds.ImageName);
     }
 }

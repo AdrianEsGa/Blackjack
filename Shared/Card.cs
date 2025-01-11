@@ -4,7 +4,7 @@ public class Card
 {
     public CardType Type { get; set; }
     public int Number { get; set; }
-    public int Value
+    public int Points
     {
         get
         {
@@ -18,33 +18,27 @@ public class Card
         }
     }
 
-    public string Name
+    public string Name => $"{Value} {TypeIcon}";    
+
+    public string Value => Number switch
     {
-        get
-        {
-            var type = Type switch
-            {
-                CardType.Hearts => "♥",
-                CardType.Diamonds => "♦",
-                CardType.Clubs => "♣",
-                CardType.Spades => "♠",
-                _ => throw new ArgumentOutOfRangeException()
-            };
+        1 => "A",
+        11 => "J",
+        12 => "Q",
+        13 => "K",
+        _ => Number.ToString()
+    };
 
-            var value = Number switch
-            {
-                1 => "A",
-                11 => "J",
-                12 => "Q",
-                13 => "K",
-                _ => Number.ToString()
-            };
+    public string TypeIcon => Type switch
+    {
+        CardType.Hearts => "♥",
+        CardType.Diamonds => "♦",
+        CardType.Clubs => "♣",
+        CardType.Spades => "♠",
+        _ => throw new ArgumentOutOfRangeException()
+    };
 
-            return $"{value} {type}";
-        }
-    }
-
-    public string ImageName => $"{Number}_{Type}.png";
+    public string ImageName => $"{Value}_{Type}.png";
 }
 
 public enum CardType

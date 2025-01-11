@@ -57,11 +57,11 @@ public class Player
     {
         var cards = playCards.Where(x => x.Visible == visibleCards).Select(x => x.Card).ToList();
 
-        var points = cards.Sum(x => x.Value);
+        var points = cards.Sum(x => x.Points);
 
         if (points > 21)
         {
-            var aces = cards.Count(x => x.Value == 1);
+            var aces = cards.Count(x => x.Points == 1);
 
             while (points > 21 && aces > 0)
             {

@@ -4,8 +4,8 @@ namespace Server.Core;
 
 public class Engine
 {
-    private const int _maxRooms = 1;
-    private const int _maxPlayersPerRoom = 3;
+    private const int _maxAlowedRooms = 2;
+    private const int _maxAllowedPlayersPerRoom = 4;
 
     private List<Room> _rooms;
 
@@ -113,9 +113,10 @@ public class Engine
 
     private ServerResponse FindAndEnterRoom(ClientRequest request)
     {
-        var room = _rooms.FirstOrDefault(r => r.Players.Count() < _maxPlayersPerRoom);
+        var room = _rooms.FirstOrDefault(r => r.Players.Count() < _maxAllowedPlayersPerRoom && 
+                                        !r.Players.Select(x => x.Identifier).Contains(request.PlayerId));
 
-        if (room is null && _rooms.Count >= _maxRooms)
+        if (room is null && _rooms.Count >= _maxAlowedRooms)
             return ServerResponse.Failed(request.RequestId, "Sorry, all the rooms are full ...");
 
         if (room is null)
