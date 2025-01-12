@@ -7,7 +7,7 @@ public class Engine
     private const int _maxAlowedRooms = 2;
     private const int _maxAllowedPlayersPerRoom = 4;
 
-    private List<Room> _rooms;
+    private readonly List<Room> _rooms;
 
     public Engine()
     {
@@ -23,6 +23,7 @@ public class Engine
             ActionType.SkipTurn => SkipTurn(request),
             ActionType.OutRoom => OutRoom(request),
             ActionType.RefreshGame => RefreshGame(request),
+            ActionType.StartNewGame => StartNewGame(request),
             ActionType.TestConnection => ServerResponse.Success(request.RequestId, new GameInfo { Status = PlayerStatus.Lobby }),
             _ => ServerResponse.Failed(request.RequestId, "Invalid action"),
         };
@@ -113,7 +114,7 @@ public class Engine
 
     private ServerResponse FindAndEnterRoom(ClientRequest request)
     {
-        var room = _rooms.FirstOrDefault(r => r.Players.Count() < _maxAllowedPlayersPerRoom && 
+        var room = _rooms.FirstOrDefault(r => r.Players.Count() < _maxAllowedPlayersPerRoom &&
                                         !r.Players.Select(x => x.Identifier).Contains(request.PlayerId));
 
         if (room is null && _rooms.Count >= _maxAlowedRooms)
@@ -132,6 +133,17 @@ public class Engine
             room.PlayerPlaying = room.Players[0];
             room.Players[0].Status = PlayerStatus.Playing;
         }
+
+        return GetResponse(request, room);
+    }
+
+    private ServerResponse StartNewGame(ClientRequest request)
+    {
+        var room = _rooms.FindRoom(request.RoomId!);
+        if (room is null)
+            return ServerResponse.Failed(request.RequestId, "Room not found");
+
+        room.StartNewGame();
 
         return GetResponse(request, room);
     }
@@ -214,7 +226,7 @@ public class Engine
         }
     }
 
-    private ServerResponse GetResponse(ClientRequest request, Room? room = null)
+    private static ServerResponse GetResponse(ClientRequest request, Room? room = null)
     {
         var player = room?.Players.SingleOrDefault(x => x.Identifier == request.PlayerId);
         var crupier = room?.Crupier;
@@ -227,6 +239,7 @@ public class Engine
                 Room = room is null ? null : new GameInfoRoom
                 {
                     Indentifier = room.Identifier.ToString(),
+                    Status = room.Status,
                     Crupier = new GameInfoPlayer
                     {
                         Identifier = crupier!.Identifier,
@@ -244,7 +257,16 @@ public class Engine
                                               Cards = p.Cards,
                                               Status = p.Status,
                                               Points = p.Points
-                                          }).ToList()
+                                          }).ToList(),
+
+                    PlayerPlaying = new GameInfoPlayer
+                    {
+                        Identifier = room.PlayerPlaying.Identifier,
+                        Turn = room.PlayerPlaying.Turn,
+                        Cards = room.PlayerPlaying.Cards,
+                        Status = room.PlayerPlaying.Status,
+                        Points = room.PlayerPlaying.Points
+                    }
                 }
             });
     }

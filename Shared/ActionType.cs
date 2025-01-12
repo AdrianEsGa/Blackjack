@@ -7,5 +7,6 @@ public enum ActionType
     SkipTurn = 2,
     OutRoom = 3,
     RefreshGame = 4,
-    TestConnection = 5
+    TestConnection = 5,
+    StartNewGame = 6
 }

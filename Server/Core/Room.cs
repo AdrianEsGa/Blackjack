@@ -54,6 +54,24 @@ public class Room
             Status = RoomStatus.EndGame;
     }
 
+    public void StartNewGame()
+    {
+        Deck = Deck.Build();    
+
+        Crupier.Cards = [Deck.Draw(isVisible: false), Deck.Draw()];
+
+        foreach(var player in Players)
+        {
+            player.Cards = [Deck.Draw(isVisible: true), Deck.Draw()];
+            player.Status = PlayerStatus.WaitingTurn;
+        }
+
+        PlayerPlaying = Players[0];
+        Players[0].Status = PlayerStatus.Playing;
+
+        Status = RoomStatus.Playing;   
+    }
+
     public T GetNext<T>(List<T> list, int current, Func<T, int> selector)
     {
         if (list == null || list.Count == 0)

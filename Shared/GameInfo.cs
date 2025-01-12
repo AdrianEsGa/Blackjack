@@ -11,10 +11,12 @@ public class GameInfoRoom
 {
     public string Indentifier { get; set; } = "";
     public RoomStatus Status { get; set; }
+    public int GameCount { get; set; }
     public GameInfoPlayer Crupier { get; set; } = default!;
     public List<PlayCard> Cards { get; set; } = default!;
     public GameInfoPoints Points { get; set; } = default!;
     public List<GameInfoPlayer> Players { get; set; } = default!;
+    public GameInfoPlayer PlayerPlaying { get; set; } = default!;
 }
 
 public class GameInfoPlayer

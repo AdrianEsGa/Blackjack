@@ -47,6 +47,14 @@ public class Engine
         Send(BuildRequest(ActionType.RefreshGame));
     }
 
+    public void StartNewGame()
+    {
+        if (!IsInRoom())
+            return;
+
+        Send(BuildRequest(ActionType.StartNewGame));
+    }
+
     public void Receive(ServerResponse serverResponse)
     {
         if (serverResponse.Status == ResponseStatus.Success)

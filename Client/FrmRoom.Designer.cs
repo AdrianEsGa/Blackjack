@@ -34,31 +34,17 @@ partial class FrmRoom
         btnTakeCard = new Button();
         timerCheckTurn = new System.Windows.Forms.Timer(components);
         lblPlayerId = new Label();
-        pbCrupierCard2 = new PictureBox();
-        pbCrupierCard1 = new PictureBox();
-        pbPlayer1Card1 = new PictureBox();
-        pbPlayer1Card2 = new PictureBox();
-        pbPlayer2Card1 = new PictureBox();
-        pbPlayer2Card2 = new PictureBox();
-        pbPlayer3Card1 = new PictureBox();
-        pbPlayer3Card2 = new PictureBox();
-        pbPlayer4Card1 = new PictureBox();
-        pbPlayer4Card2 = new PictureBox();
-        ((System.ComponentModel.ISupportInitialize)pbCrupierCard2).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbCrupierCard1).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer1Card1).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer1Card2).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer2Card1).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer2Card2).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer3Card1).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer3Card2).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer4Card1).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer4Card2).BeginInit();
+        flwPlayer1 = new FlowLayoutPanel();
+        flwPlayer2 = new FlowLayoutPanel();
+        flwPlayer3 = new FlowLayoutPanel();
+        flwPlayer4 = new FlowLayoutPanel();
+        lblGameStatus = new Label();
+        flwCrupier = new FlowLayoutPanel();
         SuspendLayout();
         // 
         // btnOutRoom
         // 
-        btnOutRoom.Location = new Point(1111, 12);
+        btnOutRoom.Location = new Point(1205, 12);
         btnOutRoom.Name = "btnOutRoom";
         btnOutRoom.Size = new Size(143, 62);
         btnOutRoom.TabIndex = 8;
@@ -68,7 +54,7 @@ partial class FrmRoom
         // 
         // btnSkip
         // 
-        btnSkip.Location = new Point(682, 653);
+        btnSkip.Location = new Point(694, 777);
         btnSkip.Name = "btnSkip";
         btnSkip.Size = new Size(144, 45);
         btnSkip.TabIndex = 6;
@@ -78,7 +64,7 @@ partial class FrmRoom
         // 
         // btnTakeCard
         // 
-        btnTakeCard.Location = new Point(515, 653);
+        btnTakeCard.Location = new Point(527, 777);
         btnTakeCard.Name = "btnTakeCard";
         btnTakeCard.Size = new Size(148, 45);
         btnTakeCard.TabIndex = 5;
@@ -95,136 +81,92 @@ partial class FrmRoom
         // lblPlayerId
         // 
         lblPlayerId.AutoSize = true;
-        lblPlayerId.Location = new Point(23, 31);
+        lblPlayerId.Location = new Point(12, 12);
         lblPlayerId.Name = "lblPlayerId";
         lblPlayerId.Size = new Size(279, 25);
         lblPlayerId.TabIndex = 9;
         lblPlayerId.Text = "Player Id: 28821nud2wnud19d81j";
         // 
-        // pbCrupierCard2
+        // flwPlayer1
         // 
-        pbCrupierCard2.Location = new Point(657, 65);
-        pbCrupierCard2.Name = "pbCrupierCard2";
-        pbCrupierCard2.Size = new Size(136, 167);
-        pbCrupierCard2.SizeMode = PictureBoxSizeMode.Zoom;
-        pbCrupierCard2.TabIndex = 11;
-        pbCrupierCard2.TabStop = false;
+        flwPlayer1.AutoSize = true;
+        flwPlayer1.Location = new Point(12, 298);
+        flwPlayer1.Margin = new Padding(0);
+        flwPlayer1.Name = "flwPlayer1";
+        flwPlayer1.RightToLeft = RightToLeft.Yes;
+        flwPlayer1.Size = new Size(279, 193);
+        flwPlayer1.TabIndex = 21;
         // 
-        // pbCrupierCard1
+        // flwPlayer2
         // 
-        pbCrupierCard1.Location = new Point(515, 65);
-        pbCrupierCard1.Name = "pbCrupierCard1";
-        pbCrupierCard1.Size = new Size(136, 167);
-        pbCrupierCard1.SizeMode = PictureBoxSizeMode.Zoom;
-        pbCrupierCard1.TabIndex = 12;
-        pbCrupierCard1.TabStop = false;
+        flwPlayer2.AutoSize = true;
+        flwPlayer2.Location = new Point(320, 564);
+        flwPlayer2.Name = "flwPlayer2";
+        flwPlayer2.RightToLeft = RightToLeft.Yes;
+        flwPlayer2.Size = new Size(279, 193);
+        flwPlayer2.TabIndex = 22;
         // 
-        // pbPlayer1Card1
+        // flwPlayer3
         // 
-        pbPlayer1Card1.Location = new Point(35, 227);
-        pbPlayer1Card1.Name = "pbPlayer1Card1";
-        pbPlayer1Card1.Size = new Size(136, 167);
-        pbPlayer1Card1.SizeMode = PictureBoxSizeMode.Zoom;
-        pbPlayer1Card1.TabIndex = 14;
-        pbPlayer1Card1.TabStop = false;
+        flwPlayer3.AutoSize = true;
+        flwPlayer3.Location = new Point(712, 564);
+        flwPlayer3.Name = "flwPlayer3";
+        flwPlayer3.RightToLeft = RightToLeft.Yes;
+        flwPlayer3.Size = new Size(279, 193);
+        flwPlayer3.TabIndex = 23;
         // 
-        // pbPlayer1Card2
+        // flwPlayer4
         // 
-        pbPlayer1Card2.Location = new Point(177, 227);
-        pbPlayer1Card2.Name = "pbPlayer1Card2";
-        pbPlayer1Card2.Size = new Size(136, 167);
-        pbPlayer1Card2.SizeMode = PictureBoxSizeMode.Zoom;
-        pbPlayer1Card2.TabIndex = 13;
-        pbPlayer1Card2.TabStop = false;
+        flwPlayer4.AutoSize = true;
+        flwPlayer4.Location = new Point(1053, 298);
+        flwPlayer4.Name = "flwPlayer4";
+        flwPlayer4.RightToLeft = RightToLeft.Yes;
+        flwPlayer4.Size = new Size(279, 193);
+        flwPlayer4.TabIndex = 24;
         // 
-        // pbPlayer2Card1
+        // lblGameStatus
         // 
-        pbPlayer2Card1.Location = new Point(340, 440);
-        pbPlayer2Card1.Name = "pbPlayer2Card1";
-        pbPlayer2Card1.Size = new Size(136, 167);
-        pbPlayer2Card1.SizeMode = PictureBoxSizeMode.Zoom;
-        pbPlayer2Card1.TabIndex = 16;
-        pbPlayer2Card1.TabStop = false;
+        lblGameStatus.AutoSize = true;
+        lblGameStatus.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+        lblGameStatus.ForeColor = Color.FromArgb(0, 192, 0);
+        lblGameStatus.Location = new Point(548, 25);
+        lblGameStatus.Name = "lblGameStatus";
+        lblGameStatus.Size = new Size(127, 32);
+        lblGameStatus.TabIndex = 25;
+        lblGameStatus.Text = "Playing ...";
         // 
-        // pbPlayer2Card2
+        // flwCrupier
         // 
-        pbPlayer2Card2.Location = new Point(482, 440);
-        pbPlayer2Card2.Name = "pbPlayer2Card2";
-        pbPlayer2Card2.Size = new Size(136, 167);
-        pbPlayer2Card2.SizeMode = PictureBoxSizeMode.Zoom;
-        pbPlayer2Card2.TabIndex = 15;
-        pbPlayer2Card2.TabStop = false;
-        // 
-        // pbPlayer3Card1
-        // 
-        pbPlayer3Card1.Location = new Point(706, 440);
-        pbPlayer3Card1.Name = "pbPlayer3Card1";
-        pbPlayer3Card1.Size = new Size(136, 167);
-        pbPlayer3Card1.SizeMode = PictureBoxSizeMode.Zoom;
-        pbPlayer3Card1.TabIndex = 18;
-        pbPlayer3Card1.TabStop = false;
-        // 
-        // pbPlayer3Card2
-        // 
-        pbPlayer3Card2.Location = new Point(848, 440);
-        pbPlayer3Card2.Name = "pbPlayer3Card2";
-        pbPlayer3Card2.Size = new Size(136, 167);
-        pbPlayer3Card2.SizeMode = PictureBoxSizeMode.Zoom;
-        pbPlayer3Card2.TabIndex = 17;
-        pbPlayer3Card2.TabStop = false;
-        // 
-        // pbPlayer4Card1
-        // 
-        pbPlayer4Card1.Location = new Point(1019, 227);
-        pbPlayer4Card1.Name = "pbPlayer4Card1";
-        pbPlayer4Card1.Size = new Size(136, 167);
-        pbPlayer4Card1.SizeMode = PictureBoxSizeMode.Zoom;
-        pbPlayer4Card1.TabIndex = 20;
-        pbPlayer4Card1.TabStop = false;
-        // 
-        // pbPlayer4Card2
-        // 
-        pbPlayer4Card2.Location = new Point(1161, 227);
-        pbPlayer4Card2.Name = "pbPlayer4Card2";
-        pbPlayer4Card2.Size = new Size(136, 167);
-        pbPlayer4Card2.SizeMode = PictureBoxSizeMode.Zoom;
-        pbPlayer4Card2.TabIndex = 19;
-        pbPlayer4Card2.TabStop = false;
+        flwCrupier.AutoSize = true;
+        flwCrupier.Location = new Point(527, 90);
+        flwCrupier.Margin = new Padding(0);
+        flwCrupier.Name = "flwCrupier";
+        flwCrupier.RightToLeft = RightToLeft.Yes;
+        flwCrupier.Size = new Size(279, 193);
+        flwCrupier.TabIndex = 26;
         // 
         // FrmRoom
         // 
         AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(1337, 710);
-        Controls.Add(pbPlayer4Card1);
-        Controls.Add(pbPlayer4Card2);
-        Controls.Add(pbPlayer3Card1);
-        Controls.Add(pbPlayer3Card2);
-        Controls.Add(pbPlayer2Card1);
-        Controls.Add(pbPlayer2Card2);
-        Controls.Add(pbPlayer1Card1);
-        Controls.Add(pbPlayer1Card2);
-        Controls.Add(pbCrupierCard1);
-        Controls.Add(pbCrupierCard2);
+        ClientSize = new Size(1368, 876);
+        ControlBox = false;
+        Controls.Add(flwCrupier);
+        Controls.Add(lblGameStatus);
+        Controls.Add(flwPlayer4);
+        Controls.Add(flwPlayer3);
+        Controls.Add(flwPlayer2);
+        Controls.Add(flwPlayer1);
         Controls.Add(lblPlayerId);
         Controls.Add(btnOutRoom);
         Controls.Add(btnSkip);
         Controls.Add(btnTakeCard);
         FormBorderStyle = FormBorderStyle.FixedToolWindow;
+        MaximizeBox = false;
         Name = "FrmRoom";
         Text = "Room";
         FormClosing += FrmRoom_FormClosing;
         Load += FrmRoom_Load;
-        ((System.ComponentModel.ISupportInitialize)pbCrupierCard2).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbCrupierCard1).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer1Card1).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer1Card2).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer2Card1).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer2Card2).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer3Card1).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer3Card2).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer4Card1).EndInit();
-        ((System.ComponentModel.ISupportInitialize)pbPlayer4Card2).EndInit();
         ResumeLayout(false);
         PerformLayout();
     }
@@ -235,14 +177,10 @@ partial class FrmRoom
     private Button btnTakeCard;
     private System.Windows.Forms.Timer timerCheckTurn;
     private Label lblPlayerId;
-    private PictureBox pbCrupierCard2;
-    private PictureBox pbCrupierCard1;
-    private PictureBox pbPlayer1Card1;
-    private PictureBox pbPlayer1Card2;
-    private PictureBox pbPlayer2Card1;
-    private PictureBox pbPlayer2Card2;
-    private PictureBox pbPlayer3Card1;
-    private PictureBox pbPlayer3Card2;
-    private PictureBox pbPlayer4Card1;
-    private PictureBox pbPlayer4Card2;
+    private FlowLayoutPanel flwPlayer1;
+    private FlowLayoutPanel flwPlayer2;
+    private FlowLayoutPanel flwPlayer3;
+    private FlowLayoutPanel flwPlayer4;
+    private Label lblGameStatus;
+    private FlowLayoutPanel flwCrupier;
 }
